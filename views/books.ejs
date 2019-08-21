@@ -23,6 +23,13 @@
                     <a href="<%= nav[i].link %>"><%= nav[i].title %></a>
                 </li>
             <% } %>
+            <li>
+              <a href="/addbook">Add Book</a>
+          </li>
+          <li>
+              <a href="/addauthor">Add Author</a>
+          </li>
+          
       </ul>
      
     </nav>
@@ -83,7 +90,7 @@
                           <h5>
                           <%= book[i].publisher %>
                           </h5>
-                          <a href="/booksingle/<%= i %>" class="btn btn-primary">Readmore...</a>
+                          <a href="/booksingle/<%= book[i]._id %>" class="btn btn-primary">Readmore...</a>
                         </div>
                         <div class="col-xs-3"></div>
                       </div>

@@ -1,10 +1,38 @@
 const Express = require('express');
+const bodyParser = require('body-parser');
+const request = require('request');
+const Mongoose = require('mongoose');
 
 var app = new Express();
 
 app.set('view engine','ejs'); 
 
 app.use(Express.static(__dirname+"/public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+
+Mongoose.connect("mongodb://localhost:27017/elibrary2db");
+//Mongoose.connect("mongodb+srv://mongodb:mongodb@mycluster-ucvz5.mongodb.net/elibrarydb?retryWrites=true&w=majority");
+
+const BookModel = Mongoose.model("book",{
+    title:String,
+    picture:String,
+    author:String,
+    publisher:String,
+    DoP:String,
+    distributer:String,
+    price:String,
+    desc:String
+});
+
+const AuthorModel = Mongoose.model("author",{
+    name:String,
+    picture:String,
+    DoB:String,
+    Place:String,
+    Books:String
+});
+
 
 nav= [
         {
@@ -101,25 +129,151 @@ app.get('/',(req,res)=>{
     res.render('index',{nav,title:'Library'});
 });
 
-app.get('/books',(req,res)=>{
-    res.render('books',{book,title:'Books'});
+app.get('/bookall',(req,res)=>{
+    var result = BookModel.find((error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
 });
 
-app.get('/authors',(req,res)=>{
-    res.render('authors',{author,title:'Authors'});
+const APIUrl = "http://localhost:3456/bookall";
+
+app.get('/books',(req,res)=>{
+    request(APIUrl,(error,response,body)=>{
+        var book = JSON.parse(body);
+        res.render('books',{book,title:'Books'});
+    });
+    
 });
+
+app.get('/authorall',(req,res)=>{
+    var result = AuthorModel.find((error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
+const APIUrl3 = "http://localhost:3456/authorall";
+
+app.get('/authors',(req,res)=>{
+    request(APIUrl3,(error,response,body)=>{
+        var author = JSON.parse(body);
+        res.render('authors',{author,title:'Authors'});
+    });
+    
+});
+
+app.get('/authorone',(req,res)=>{
+    var item = req.query.q;
+    var result = AuthorModel.findOne({_id:item},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
+const APIUrl4 = "http://localhost:3456/authorone";
 
 app.get('/authorsingle/:id',(req,res)=>{
     const x= req.params.id;
-    res.render('authorsingle',{author:author[x]});
+    request(APIUrl4+"/?q="+x,(error,response,body)=>{
+        var author = JSON.parse(body);
+        //console.log(book);
+        res.render('authorsingle',{author:author});
+    });
 });
+
+app.get('/bookone',(req,res)=>{
+    var item = req.query.q;
+    var result = BookModel.findOne({_id:item},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
+const APIUrl2 = "http://localhost:3456/bookone";
 
 app.get('/booksingle/:id',(req,res)=>{
 
     const x= req.params.id;
-    res.render('booksingle',{books:book[x]});
+    request(APIUrl2+"/?q="+x,(error,response,body)=>{
+        var book = JSON.parse(body);
+        console.log(book);
+        res.render('booksingle',{books:book});
+    });
+    
 });
 
+app.post('/addbookAPI',(req,res)=>{
+    var book = new BookModel(req.body);
+    //console.log(req.body);
+    var result = book.save((error,data)=>{
+        //console.log('Message 1');
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            //console.log('Message 2');
+            res.send("<script>alert('Book Inserted')</script><script>window.location.href='/addbook'</script>");
+        }
+    });
+});
+
+app.post('/addauthorAPI',(req,res)=>{
+    var author = new AuthorModel(req.body);
+    //console.log(req.body);
+    var result = author.save((error,data)=>{
+        //console.log('Message 1');
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            //console.log('Message 2');
+            res.send("<script>alert('Author Inserted')</script><script>window.location.href='/addauthor'</script>");
+        }
+    });
+});
+
+app.get('/addbook',(req,res)=>{
+    res.render('addbook');
+});
+
+app.get('/addauthor',(req,res)=>{
+    res.render('addauthor');
+});
 
 app.listen(process.env.PORT || 3456,()=>{
     console.log("Server running on port::3456...");

@@ -27,10 +27,11 @@
               <a href="/addbook">Add Book</a>
           </li>
           <li>
-              <a href="/addauthor">Add Author</a>
-          </li>
+                <a href="/addauthor">Add Author</a>
+            </li>
+         
       </ul>
-      
+     
     </nav>
   </div>
 </header>
@@ -39,13 +40,18 @@
   <div class="container">
     <div class="row">
       <div class="col-md-7">
-        <h1><%= title %>
+        <h1>Authors
           <p class="lead"></p>
         </h1>
       </div>
       <div class="col-md-5">
         <div class="well well-lg"> 
-         
+          <div class="row">
+            <div class="col-sm-12">
+              
+			
+            </div>
+          </div>
         </div>
       </div>
     </div> 
@@ -70,26 +76,16 @@
       <div class="panel">
         <div class="panel-body">
                 
-            <% for(var i=0;i<author.length;i++){ %>
-                <div class="row">    
-                    <br>
-                    <div class="col-md-2 col-sm-3 text-center">
-                      <a class="story-title" href="#"><img alt="" src="<%= author[i].picture %>" style="width:100px;height:100px" class="img-circle"></a>
-                    </div>
-                    <div class="col-md-10 col-sm-9">
-                      <h3><%= author[i].name %></h3>
-                      <div class="row">
-                        <div class="col-xs-9">
-                          <h4><%= author[i].DoB %></h4>
-                          <a href="/authorsingle/<%= author[i]._id %>" class="btn btn-primary">Readmore...</a>
-                        </div>
-                        <div class="col-xs-3"></div>
-                      </div>
-                      <br><br>
-                    </div>
-                </div>
-                  <hr>     
-              <% } %>       
+                <form action="/addauthorAPI" method="POST">
+                    <table class="table">
+                        <tr><td>Author Name:</td><td><input type="text" name="name" class="form-control" id=""></td></tr>
+                        <tr><td>Image:</td><td><input type="text" name="picture" class="form-control" id=""></td></tr>
+                        <tr><td>DoB:</td><td><input type="date" name="DoB" class="form-control" id=""></td></tr>
+                        <tr><td>Place:</td><td><input type="text" name="Place" class="form-control" id=""></td></tr>
+                        <tr><td>Books:</td><td><textarea name="Books" id="" cols="40" rows="3"></textarea></td></tr>
+                        <tr><td></td><td><input type="submit" class="btn btn-primary" value="Submit"></td></tr>
+                    </table>
+                </form>
           
         </div>
       </div>
@@ -105,7 +101,7 @@
 <hr>
 
 <div class="container" id="footer">
-  
+ 
 </div>
 
 <hr>
