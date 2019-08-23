@@ -6,12 +6,12 @@
 		<title>LMS</title>
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<link href="/css/styles.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
 	</head>
 	<body>
 <header class="navbar navbar-bright navbar-fixed-top" role="banner">
@@ -40,7 +40,7 @@
     </li>
           
       </ul>
-      
+     
     </nav>
   </div>
 </header>
@@ -49,13 +49,18 @@
   <div class="container">
     <div class="row">
       <div class="col-md-7">
-        <h1> <%= author.name %>
+        <h1><%= title %>
           <p class="lead"></p>
         </h1>
       </div>
       <div class="col-md-5">
         <div class="well well-lg"> 
-         
+          <div class="row">
+            <div class="col-sm-12">
+              
+			
+            </div>
+          </div>
         </div>
       </div>
     </div> 
@@ -80,19 +85,21 @@
       <div class="panel">
         <div class="panel-body">
                 
-        
+            <% for(var i=0;i<user.length;i++){ %>
                 <div class="row">    
                     <br>
                     <div class="col-md-2 col-sm-3 text-center">
-                      <a class="story-title" href="#"><img alt="" src="<%= author.picture %>" style="width:100px;height:100px" class="img-circle"></a>
-                    </div>
+                        <a class="story-title" href="#"><img alt="" src="" style="width:100px;height:100px" class="img-circle"></a>
+                      </div>
                     <div class="col-md-10 col-sm-9">
-                      <h3><%= author.name %></h3>
+                      <h3><%= user[i].ename %></h3>
                       <div class="row">
                         <div class="col-xs-9">
-                          <h4><strong>DoB: </strong><%= author.DoB %></h4>
-                          <h4><strong>Place: </strong><%= author.Place %></h4>
-                          <h4><strong>Books: </strong><%= author.Books %></h4>
+                          <h4><strong>Address: </strong><%= user[i].eaddress%></h4>
+                          <h4><strong>Gender: </strong><%= user[i].egender %></h4>
+                          <h4><strong>DoB: </strong><%= user[i].edob %></h4>
+                          <h4><strong>Email: </strong><%= user[i].eemail %></h4>
+                          <h4><strong>Username: </strong><%= user[i].euname %></h4>
                         </div>
                         <div class="col-xs-3"></div>
                       </div>
@@ -100,7 +107,7 @@
                     </div>
                 </div>
                   <hr>     
-             
+              <% } %>       
           
         </div>
       </div>
@@ -116,7 +123,7 @@
 <hr>
 
 <div class="container" id="footer">
-  
+ 
 </div>
 
 <hr>

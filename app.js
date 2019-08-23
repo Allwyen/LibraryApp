@@ -11,8 +11,8 @@ app.use(Express.static(__dirname+"/public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-Mongoose.connect("mongodb://localhost:27017/elibrary2db");
-//Mongoose.connect("mongodb+srv://mongodb:mongodb@mycluster-ucvz5.mongodb.net/elibrarydb?retryWrites=true&w=majority");
+//Mongoose.connect("mongodb://localhost:27017/elibrary2db");
+Mongoose.connect("mongodb+srv://mongodb:mongodb@mycluster-ucvz5.mongodb.net/LibraryApp?retryWrites=true&w=majority");
 
 const BookModel = Mongoose.model("book",{
     title:String,
@@ -31,6 +31,17 @@ const AuthorModel = Mongoose.model("author",{
     DoB:String,
     Place:String,
     Books:String
+});
+
+const UserModel= Mongoose.model("users",{
+    ename:String,
+    eaddress:String,
+    egender:String,
+    edob:String,
+    eemail:String,
+    euname:String,
+    epass:String,
+    ecpass:String
 });
 
 
@@ -124,8 +135,81 @@ author=[{
     'Books': ['The subtle art of Not Giving F**k','Everything is f**ked']
 }];
 
-
 app.get('/',(req,res)=>{
+    res.render('login');
+});
+
+app.get('/loginAPI',(req,res)=>{
+    var item1 = req.query.euname;
+    var item2 = req.query.epass;
+    var result = UserModel.find({$and:[{euname:item1},{epass:item2}]},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+        
+    })
+})
+
+const APIurl5 = "http://localhost:3456/loginAPI"
+
+app.post('/employeelogin',(req,res)=>{
+    var item1 = req.body.euname;
+    var item2 = req.body.epass;
+
+    request(APIurl5+"/?euname="+item1+"&&epass="+item2,(error,response,body)=>{
+        var data = JSON.parse(body);
+
+
+        console.log(data);
+        if(data.length>0){
+
+            if(item1==data[0].euname && item2==data[0].epass)
+            {
+                //res.send(data.euname);
+                res.send("<script>alert('Login Successfull')</script><script>window.location.href='/index'</script>");
+            }
+
+
+        }
+        else{
+            res.send("<script>alert('Login unSuccessfull')</script><script>window.location.href='/'</script>");
+            
+        }
+
+
+    });
+});
+
+app.get('/register',(req,res)=>{
+    res.render('register');
+});
+
+app.post('/employeeregister',(req,res)=>{
+    //var items=req.body;
+    //res.render('read',{item:items});
+
+    var user = new UserModel(req.body);
+    var result = user.save((error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send("<script>alert('User Successfully Inserted')</script><script>window.location.href='/register'</script>");
+        }
+    });
+
+});
+
+app.get('/index',(req,res)=>{
     res.render('index',{nav,title:'Library'});
 });
 
@@ -266,13 +350,112 @@ app.post('/addauthorAPI',(req,res)=>{
         }
     });
 });
+/* 
+    STEPS FOR BELOW CODE
 
+    1) --> Below code says that a route '/empdelete' is created. 
+    2) --> Then a request is gone to APIurl.
+    3) --> Now the APIurl(Name of API is '/deleteAPI') runs its own code. 
+    4) --> Afterwards from the APIurl data is parsed to JSON.
+    5) --> Now this parsed JSON data is displayed on to our webpage.
+*/
 app.get('/addbook',(req,res)=>{
     res.render('addbook');
 });
 
 app.get('/addauthor',(req,res)=>{
     res.render('addauthor');
+});
+
+app.get('/deleteuser',(req,res)=>{
+    res.render('deleteuser');
+});
+
+//An API to delete employee
+
+app.get('/deleteAPI',(req,res)=>{
+    var item= req.query.euname;
+
+    var result = UserModel.deleteOne({euname:item},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    })
+})
+
+const APIurl6 = "http://localhost:3456/deleteAPI"
+
+app.post('/empdelete',(req,res)=>{
+    var item = req.body.euname;
+
+    request(APIurl6+"/?euname="+item,(error,response,body)=>{
+
+        res.send("<script>alert('User Deleted')</script><script>window.location.href='/deleteuser'</script>");
+
+    })
+});
+
+app.get('/userall',(req,res)=>{
+    var result = UserModel.find((error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
+const APIUrl7 = "http://localhost:3456/userall";
+
+app.get('/viewusers',(req,res)=>{
+    request(APIUrl7,(error,response,body)=>{
+        var user = JSON.parse(body);
+        res.render('viewusers',{user:user,title:'Users'});
+    });
+    
+});
+
+app.get('/updateprice',(req,res)=>{
+    res.render('updateprice');
+});
+
+//An API to update price
+
+app.get('/updateAPI',(req,res)=>{
+    var item1 = req.query.title;
+    var result = BookModel.updateOne({title:item1},{$set:{price:req.query.price}},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    })
+})
+
+const APIurl8 = "http://localhost:3456/updateAPI"
+
+app.post('/bookupdate',(req,res)=>{
+    var item1 = req.body.title;
+    var item2 = req.body.price;
+    request(APIurl8+"/?title="+item1+"&&price="+item2,(error,response,body)=>{
+
+        res.send("<script>alert('Book Price Updated')</script><script>window.location.href='/updateprice'</script>");
+
+    })
 });
 
 app.listen(process.env.PORT || 3456,()=>{
