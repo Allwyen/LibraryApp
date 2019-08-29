@@ -228,6 +228,25 @@ app.post('/employeeregister',(req,res)=>{
 
 });
 
+app.post('/employeeregister1',(req,res)=>{
+    //var items=req.body;
+    //res.render('read',{item:items});
+
+    var user = new UserModel(req.body);
+    var result = user.save((error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+
+});
+
 app.get('/index',(req,res)=>{
     res.render('index',{nav,title:'Library'});
 });
