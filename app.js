@@ -175,7 +175,7 @@ app.get('/loginAPI',(req,res)=>{
     })
 })
 
-const APIurl5 = "http://libraryapp-allwyen.herokuapp.com/loginAPI"
+const APIurl5 = "https://libraryapp-allwyen.herokuapp.com/loginAPI"
 
 app.post('/employeelogin',(req,res)=>{
     var item1 = req.body.euname;
@@ -199,6 +199,33 @@ app.post('/employeelogin',(req,res)=>{
         else{
             res.send("<script>alert('Login unSuccessfull')</script><script>window.location.href='/'</script>");
             
+        }
+
+
+    });
+});
+
+app.post('/employeelogin1',(req,res)=>{
+    var item1 = req.body.euname;
+    var item2 = req.body.epass;
+
+    request(APIurl5+"/?euname="+item1+"&&epass="+item2,(error,response,body)=>{
+        var data = JSON.parse(body);
+
+
+        console.log(data);
+        if(data.length>0){
+
+            if(item1==data[0].euname && item2==data[0].epass)
+            {
+                res.send(data);
+                            }
+
+
+        }
+        else{
+            res.send(data);
+                        
         }
 
 
