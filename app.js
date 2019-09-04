@@ -352,6 +352,21 @@ app.get('/authorsingle/:id',(req,res)=>{
     });
 });
 
+app.post('/viewbooksingle',(req,res)=>{
+    const x = req.body._id;
+    var result = BookModel.findOne({_id:x},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
 app.get('/bookone',(req,res)=>{
     var item = req.query.q;
     var result = BookModel.findOne({_id:item},(error,data)=>{
