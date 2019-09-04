@@ -367,6 +367,22 @@ app.post('/viewbooksingle',(req,res)=>{
     });
 });
 
+app.post('/viewauthorsingle',(req,res)=>{
+    const x = req.body.authorid;
+    var result = AuthorModel.findOne({_id:x},(error,data)=>{
+        if(error)
+        {
+            throw error;
+            res.send(error);
+        }
+        else
+        {
+            res.send(data);
+        }
+    });
+});
+
+
 app.get('/bookone',(req,res)=>{
     var item = req.query.q;
     var result = BookModel.findOne({_id:item},(error,data)=>{
