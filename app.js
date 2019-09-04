@@ -292,7 +292,7 @@ app.get('/bookall',(req,res)=>{
     });
 });
 
-const APIUrl = "http://libraryapp-allwyen.herokuapp.com/bookall";
+const APIUrl = "https://libraryapp-allwyen.herokuapp.com/bookall";
 
 app.get('/books',(req,res)=>{
     request(APIUrl,(error,response,body)=>{
@@ -316,7 +316,7 @@ app.get('/authorall',(req,res)=>{
     });
 });
 
-const APIUrl3 = "http://libraryapp-allwyen.herokuapp.com/authorall";
+const APIUrl3 = "https://libraryapp-allwyen.herokuapp.com/authorall";
 
 app.get('/authors',(req,res)=>{
     request(APIUrl3,(error,response,body)=>{
@@ -341,7 +341,7 @@ app.get('/authorone',(req,res)=>{
     });
 });
 
-const APIUrl4 = "http://libraryapp-allwyen.herokuapp.com/authorone";
+const APIUrl4 = "https://libraryapp-allwyen.herokuapp.com/authorone";
 
 app.get('/authorsingle/:id',(req,res)=>{
     const x= req.params.id;
@@ -367,7 +367,7 @@ app.get('/bookone',(req,res)=>{
     });
 });
 
-const APIUrl2 = "http://libraryapp-allwyen.herokuapp.com/bookone";
+const APIUrl2 = "https://libraryapp-allwyen.herokuapp.com/bookone";
 
 app.get('/booksingle/:id',(req,res)=>{
 
