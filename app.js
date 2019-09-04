@@ -353,7 +353,7 @@ app.get('/authorsingle/:id',(req,res)=>{
 });
 
 app.post('/viewbooksingle',(req,res)=>{
-    const x = req.body._id;
+    const x = req.body.bookid;
     var result = BookModel.findOne({_id:x},(error,data)=>{
         if(error)
         {
